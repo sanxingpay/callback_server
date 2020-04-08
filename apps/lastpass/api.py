@@ -820,3 +820,24 @@ class LastPassAPIView(GenericViewSetCustom):
             logger.error(str(e))
             return HttpResponse("error")
 
+
+    @list_route(methods=['POST','GET'])
+    def callback_custom(self, request):
+
+        try:
+            with transaction.atomic():
+                if request.method == 'POST':
+                    data = {}
+                    for item in request.data:
+                        data[item] = request.data[item]
+                else:
+                    data = {}
+                    for item in request.query_parms:
+                        data[item] = request.query_parms[item]
+                return HttpResponse(LastPassBase(data=data).call_run(request))
+        except PubErrorCustom as e:
+            logger.error(e.msg)
+            return HttpResponse("error")
+        except Exception as e:
+            logger.error(str(e))
+            return HttpResponse("error")
