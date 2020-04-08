@@ -540,6 +540,21 @@ class PayCallLastPass(PayCallBase):
         # self.handler_after()
         return None
 
+    def run_custom(self,order=None,amount=None):
+        """
+        :param order:
+        :return:
+        """
+        self.order_obj = order
+        self.amount = float(amount)
+        self.callback_request_to_server()
+        self.handlers()
+
+        # self.memo = '上游回调成功'
+        # self.flag = True
+        # self.handler_after()
+        return None
+
 
     def handwork_run(self,order=None):
         """

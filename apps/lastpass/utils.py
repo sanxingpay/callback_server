@@ -74,6 +74,64 @@ class LastPassBase(object):
 
         return "error"
 
+class LastPassBaseCustom(object):
+
+    def __init__(self,**kwargs):
+        self.secret = kwargs.get('secret')
+        self.data = kwargs.get('data',{})
+
+    def _sign(self):
+        pass
+
+
+    def call_run(self,request):
+
+        callback_ip = request.META.get("HTTP_X_REAL_IP")
+
+        logger.info("回调IP：{}".format(callback_ip))
+
+        payObj = PayPass.objects.filter(callback_ip__contains=callback_ip)
+        payObjTmp=None
+        if payObj.exists():
+            for item in payObj:
+                print(item.callback_ip)
+                for itemtmp in item.callback_ip.split(","):
+                    print(itemtmp)
+                    if str(itemtmp).strip() == str(callback_ip).strip():
+                        payObjTmp = item
+                        break
+                if payObjTmp:
+                    break
+        else:
+            raise PubErrorCustom("拒绝访问")
+
+        if not payObjTmp:
+            raise PubErrorCustom("拒绝访问")
+        payObj = payObjTmp
+
+        rules = json.loads(payObj.rules)
+
+        logger.info("规则：{}".format(rules["callback"]))
+        logger.info("回调数据：{}".format(self.data))
+
+        if str(self.data.get(rules["callback"]["codeKey"])) == rules["callback"]["ok"]:
+            try:
+                order = Order.objects.select_for_update().get(ordercode=self.data.get(rules["callback"]["key"]))
+            except Order.DoesNotExist:
+                raise PubErrorCustom("订单号不正确!")
+
+            if order.status == '0':
+                raise PubErrorCustom("订单已处理!")
+
+            if "isamount" in rules["callback"] and  self.data.get(rules["callback"]["isamount"]) == '0' :
+                PayCallLastPass().run_custom(order=order,amount=self.data.get(rules["callback"]["amountkey"]))
+            else:
+                PayCallLastPass().run(order = order)
+
+            return rules["callback"]["rvalue"]
+
+        return "error"
+
 
 class LastPass_JLF(LastPassBase):
 
