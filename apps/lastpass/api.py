@@ -835,7 +835,7 @@ class LastPassAPIView(GenericViewSetCustom):
                     data = {}
                     for item in request.query_parms:
                         data[item] = request.query_parms[item]
-                return HttpResponse(LastPassBase(data=data).call_run(request))
+                return HttpResponse(LastPassBaseCustom(data=data).call_run(request))
         except PubErrorCustom as e:
             logger.error(e.msg)
             return HttpResponse("error")

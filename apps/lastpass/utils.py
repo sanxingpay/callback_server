@@ -123,7 +123,7 @@ class LastPassBaseCustom(object):
             if order.status == '0':
                 raise PubErrorCustom("订单已处理!")
 
-            if "isamount" in rules["callback"] and  self.data.get(rules["callback"]["isamount"]) == '0' :
+            if "isamount" in rules["callback"] and  rules["callback"]["isamount"] == '0' :
                 PayCallLastPass().run_custom(order=order,amount=self.data.get(rules["callback"]["amountkey"]))
             else:
                 PayCallLastPass().run(order = order)
