@@ -10,7 +10,8 @@ from apps.lastpass.utils import LastPass_JLF,LastPass_TY,LastPass_DD,LastPass_YZ
         LastPass_XIONGMAO,LastPass_KUAILAI,LastPass_SHANGHU,LastPass_HAOYUN,LastPass_FENGNIAO,LastPass_LIANJINHAI,LastPass_JIUFU,LastPass_XINGYUANFU,LastPass_CHUANGYUAN,\
             LastPass_WXHFYS,LastPass_SDGY,LastPass_JIABAO,LastPass_QIANWANG,LastPass_CHUANGYUAN_YUANSHENG,LastPass_GUAISHOU,LastPass_TIGER,LastPass_CZKJ,LastPass_YUANLAI,\
                 LastPass_JINGSHA,LastPass_XINGHE,LastPass_ANJIE,LastPass_hahapay,LastPass_SHUIJING,LastPass_ALLWIN,LastPass_SHUIJING_NEW,LastPass_YANXINGZHIFU,LastPass_BAWANGKUAIJIE,\
-                    LastPass_JINGDONG,ShouGongHandler,LastPass_JIAHUI,LastPass_ZHONGXING,LastPass_ZHAOXING,LastPass_TIANCHENG,LastPass_IPAYZHIFUBAO,LastPass_YSLH,LastPass_JUXINGNEW,LastPassBase
+                    LastPass_JINGDONG,ShouGongHandler,LastPass_JIAHUI, LastPassBaseCustom,\
+                    LastPass_ZHONGXING,LastPass_ZHAOXING,LastPass_TIANCHENG,LastPass_IPAYZHIFUBAO,LastPass_YSLH,LastPass_JUXINGNEW,LastPassBase
 from rest_framework.response import Response
 from django.db import transaction
 from functools import wraps
