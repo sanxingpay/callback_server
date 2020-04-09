@@ -3788,6 +3788,27 @@ class ShouGongHandler(LastPassBase):
         pass
 
 
+class ShouGongHandler1(LastPassBase):
+
+    def __init__(self,**kwargs):
+        super().__init__(**kwargs)
+
+    def call_run(self):
+
+        try:
+            order = Order.objects.select_for_update().get(ordercode=self.data.get("orderid"))
+        except Order.DoesNotExist:
+            raise PubErrorCustom("订单号不正确!")
+
+        if order.status == '0':
+            raise PubErrorCustom("订单已处理!")
+
+        PayCallLastPass().run_custom(order=order,amount=self.data.get("amount"))
+
+    def message_run(self):
+        pass
+
+
 class LastPass_JIAHUI(LastPassBase):
     def __init__(self,**kwargs):
         super().__init__(**kwargs)
