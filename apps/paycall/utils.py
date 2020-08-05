@@ -174,14 +174,20 @@ class PayCallBase(object) :
             request_data['sign'] = hashlib.md5(md5params).hexdigest()
 
             logger.info("验签回调参数:{}{}".format(self.order_obj.notifyurl,request_data))
-            result = request('POST', url=urllib.parse.unquote(self.order_obj.notifyurl), data=request_data , json=request_data, verify=False)
 
-            logger.info("返回值:{}".format(result.text))
-            if result.text.strip() != 'SUCCESS':
-                logger.error("请求对方服务器错误{}".format(str(result.text)))
+            try:
+                result = request('POST', url=urllib.parse.unquote(self.order_obj.notifyurl), data=request_data , json=request_data, verify=False)
+                logger.info("返回值:{}".format(result.text))
+                if result.text.strip() != 'SUCCESS':
+                    logger.error("请求对方服务器错误{}".format(str(result.text)))
+                    self.order_obj.down_status = '2'
+                else:
+                    self.order_obj.down_status = '0'
+
+            except Exception as e:
+                logger.info("下游错误:{}".format(str(e)))
                 self.order_obj.down_status = '2'
-            else:
-                self.order_obj.down_status = '0'
+
 
     def work_handler_updbal(self,ordercode=None,memo='调账'):
         """
